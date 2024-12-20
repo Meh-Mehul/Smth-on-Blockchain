@@ -8,6 +8,7 @@ contract SqNFT {
     mapping(uint256 => bool) private _existsMapping;
     mapping(uint256 => string) private _nfts;
     mapping(uint256 => bytes32) private _tokenHashes;
+    mapping(bytes32 => bool) private _hashes;
     uint256 private _nextTokenId;
     
     constructor() {
@@ -17,11 +18,13 @@ contract SqNFT {
         return _existsMapping[tokenId];
     }
     function createNFT(string memory inputArray) public returns (uint256) {
+        bytes32 tokenHash = keccak256(abi.encodePacked(inputArray));
+        require(!_hashes[tokenHash]);
         uint256 tokenId = _nextTokenId; 
         _nextTokenId++; 
         _nfts[tokenId] = inputArray;
-        bytes32 tokenHash = keccak256(abi.encodePacked(inputArray));
         _tokenHashes[tokenId] = tokenHash;
+        _hashes[tokenHash] = true;
         _existsMapping[tokenId] = true;
         emit NFTCreated(tokenId, inputArray);
         return tokenId; 
@@ -31,7 +34,7 @@ contract SqNFT {
         require(_exists(tokenId), "NFT does not exist");
         return _nfts[tokenId];
     }
-    function validateNFT(uint256 tokenId, bool[1024] memory inputArray) public view returns (address) {
+    function validateNFT(uint256 tokenId, string memory inputArray) public view returns (address) {
         require(_exists(tokenId), "NFT does not exist");
         bytes32 inputHash = keccak256(abi.encodePacked(inputArray));
         if(inputHash == _tokenHashes[tokenId]){

@@ -51,6 +51,34 @@ describe('SqNFT Tests',
                 // console.log(nftData, tokenId)
                 assert.equal(nftData, inputString);
                 assert.equal(tokenId, 1n);
+            });
+            it('Check for NFT Ownership', async ()=>{
+                let inputString = '0'.repeat(1023) + '1';  
+                const reciept = await SqNFT.methods.createNFT(inputString).send({ from: accounts[0], gas:'2000000'});
+                assert.ok(reciept);
+                let tokenId = reciept.events.NFTCreated.returnValues.tokenId;
+                const nftData = await SqNFT.methods.getNFT(tokenId).call();
+                // console.log(nftData, tokenId)
+                // assert.equal(nftData, inputString);
+                const owner = await SqNFT.methods.validateNFT(tokenId, inputString).call();
+                assert.equal(owner, accounts[0]);
+            })
+            it('Check for Duplicate', async ()=>{
+                let inputString1 = '0'.repeat(1023) + '1';  
+                const reciept1 = await SqNFT.methods.createNFT(inputString1).send({ from: accounts[0], gas:'2000000'});
+                assert.ok(reciept1);
+                let tokenId1 = reciept1.events.NFTCreated.returnValues.tokenId;
+                const nftData1 = await SqNFT.methods.getNFT(tokenId1).call();
+                // console.log(nftData, tokenId)
+                assert.equal(nftData1, inputString1);
+                // let inputString = '0'.repeat(1022) + '11';  
+                try{
+                    const reciept = await SqNFT.methods.createNFT(inputString1).send({ from: accounts[0], gas:'2000000'});
+                    assert.ok(false);
+                }
+                catch(err){
+                    assert.ok(true);
+                }                   
             })
     }
 );
