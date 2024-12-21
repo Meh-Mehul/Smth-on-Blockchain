@@ -52,7 +52,7 @@ describe('SqNFT Tests',
                 assert.equal(nftData, inputString);
                 assert.equal(tokenId, 1n);
             });
-            it('Check for NFT Ownership', async ()=>{
+            it('Check for Contract Ownership', async ()=>{
                 let inputString = '0'.repeat(1023) + '1';  
                 const reciept = await SqNFT.methods.createNFT(inputString).send({ from: accounts[0], gas:'2000000'});
                 assert.ok(reciept);
@@ -79,6 +79,14 @@ describe('SqNFT Tests',
                 catch(err){
                     assert.ok(true);
                 }                   
+            })
+            it('Check for NFT OwnerShip', async ()=>{
+                let inputString = '0'.repeat(1023)+1;
+                const reciept = await SqNFT.methods.createNFT(inputString).send({ from: accounts[1], gas:'2000000'});
+                assert.ok(reciept);
+                let tokenId = reciept.events.NFTCreated.returnValues.tokenId;
+                const check = await SqNFT.methods.CheckOwnerShip(tokenId).call({from:accounts[1]});
+                assert.ok(check);
             })
     }
 );

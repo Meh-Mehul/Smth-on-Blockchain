@@ -9,6 +9,7 @@ contract SqNFT {
     mapping(uint256 => string) private _nfts;
     mapping(uint256 => bytes32) private _tokenHashes;
     mapping(bytes32 => bool) private _hashes;
+    mapping(uint256 => address) private _owners;
     uint256 private _nextTokenId;
     
     constructor() {
@@ -24,6 +25,7 @@ contract SqNFT {
         _nextTokenId++; 
         _nfts[tokenId] = inputArray;
         _tokenHashes[tokenId] = tokenHash;
+        _owners[tokenId] = msg.sender;
         _hashes[tokenHash] = true;
         _existsMapping[tokenId] = true;
         emit NFTCreated(tokenId, inputArray);
@@ -43,6 +45,9 @@ contract SqNFT {
         else{
             return address(0);
         }
-        
+    }
+    function CheckOwnerShip(uint256 tokenId) public view returns (bool) {
+        require(_exists(tokenId), "NFT does not exist");
+        return (msg.sender == _owners[tokenId]);
     }
 }

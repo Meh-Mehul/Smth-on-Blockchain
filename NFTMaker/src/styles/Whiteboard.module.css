@@ -1,0 +1,28 @@
+.whiteboard {
+    display: inline-block;
+    border: 2px solid #000;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    margin: 1rem;
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .cell {
+    width: 16px; /* Cell size */
+    height: 16px;
+    border: 1px solid #ddd; /* Thin grid lines */
+    background-color: white;
+    transition: background-color 0.1s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .cell:hover {
+    background-color: rgb(104, 104, 104);
+  }
+  
+  .black {
+    background-color: black;
+  }
+  
