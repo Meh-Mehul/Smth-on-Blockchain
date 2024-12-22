@@ -92,6 +92,27 @@ body, html {
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .grid-row {
+    display: flex;
+    gap: 2px;
+  }
+  
+  .grid-cell {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+  
+  .grid-cell.black {
+    background-color: black;
+  }
   
   .secondary-button {
     background-color: #007bff;
@@ -99,6 +120,12 @@ body, html {
   }
   .red{
     background-color: red;
+  }
+  .loading-spinner {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+    text-align: center;
   }
   
   .secondary-button:hover {

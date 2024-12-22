@@ -73,6 +73,7 @@ function App() {
       console.log(e);
     }
   };
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const handleFetchNFT = async () => {
     if (!tokenId) {
@@ -80,15 +81,20 @@ function App() {
       setIsModalOpen(true);
       return;
     }
-
+  
+    setIsLoading(true); // Show loading spinner
+    setTokenData(null); // Clear previous data if any
+  
     try {
-      const data:string = await SqNFT.methods.getNFT(tokenId).call();
+      const data: string = await SqNFT.methods.getNFT(tokenId).call();
+      console.log("Fetched data:", data); // Debug fetched data
       setTokenData(data);
-      console.log(data)
     } catch (error) {
       console.error(error);
       setModalMessage("Error fetching NFT data!");
       setIsModalOpen(true);
+    } finally {
+      setIsLoading(false); // Hide loading spinner
     }
   };
 
@@ -136,24 +142,32 @@ function App() {
           </button>
         </section>
         <section className="nft-fetch-section">
-          <h3>Fetch NFT Data</h3>
-          <input
-            type="text"
-            value={tokenId}
-            onChange={(e) => setTokenId(e.target.value)}
-            placeholder="Enter Token ID"
-            className="token-input"
-          />
-          <button onClick={handleFetchNFT} className="primary-button">
-            Fetch NFT
-          </button>
-          {tokenData && (
-            <>
-              <h4>Fetched NFT Grid:</h4>
-              {renderGrid(tokenData)}
-            </>
-          )}
-        </section>
+              <h3>Fetch NFT Data</h3>
+              <input
+                type="text"
+                value={tokenId}
+                onChange={(e) => setTokenId(e.target.value)}
+                placeholder="Enter Token ID"
+                className="token-input"
+              />
+              <button onClick={handleFetchNFT} className="primary-button">
+                Fetch NFT
+              </button>
+              {isLoading ? (
+                <div className="loading-spinner">Fetching NFT...</div>
+              ) : (
+                tokenData && (
+                  <>
+                    <h4>Fetched NFT Grid:</h4>
+                    {tokenData.length === 32 * 32 ? (
+                      renderGrid(tokenData)
+                    ) : (
+                      <p>Error: Fetched data is not a valid 32x32 grid!</p>
+                    )}
+                  </>
+                )
+              )}
+            </section>
       </main>
       <footer className="app-footer">
         <p>
