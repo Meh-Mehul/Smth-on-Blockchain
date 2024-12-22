@@ -39,6 +39,7 @@ contract SqNFT {
     function validateNFT(uint256 tokenId, string memory inputArray) public view returns (address) {
         require(_exists(tokenId), "NFT does not exist");
         bytes32 inputHash = keccak256(abi.encodePacked(inputArray));
+        require(inputHash == _tokenHashes[tokenId], "Not a ValiNFT!");
         if(inputHash == _tokenHashes[tokenId]){
             return owner;
         }
